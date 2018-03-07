@@ -9,6 +9,7 @@
 #import <UIKit/UIColor.h>
 
 @class TRPlacement;
+@class TRReward;
 
 typedef NS_OPTIONS(NSInteger, TRPayoutType) {
     TRPayoutEventProfileComcplete=0,
@@ -30,13 +31,22 @@ typedef NS_OPTIONS(NSInteger, TRPayoutType) {
  @abstract: Initialize TapResearch with your apiToken and callback handler.
 
  @param: apiToken Your app's unique identifier.
- @param: delegate: The class that will implement the TapResearchDelegate protocol.
+ @param: delegate: The class that will implement the TapResearchRewardsDelegate protocol.
  */
 + (void)initWithApiToken:(NSString *)apiToken delegate:(id<TapResearchRewardsDelegate>)delegate;
 
+/**
+ @method: setUniqueUserIdentifier
+ @abstract: Store unique user identifier for re-identification purposes
+ @param: userIdentifier: Unique user identifier. Required if you have opted for server to server postback.
+ */
 + (void)setUniqueUserIdentifier:(NSString *)userIdentifier;
 
-+ (void)initPlacementWithIdentifier:(NSString *)placementIdentifier block:(void(^)(TRPlacement *placement))block;
+/**
+ @method: initPlacementWithIdentifier
+ @abstract Initialize the TRPlacemnt
+*/
++ (void)initPlacementWithIdentifier:(NSString *)placementIdentifier placementBlock:(void(^)(TRPlacement *placement))block;
 /**
  @method: setNavigationBarColor
  @abstract: Set the survey wall navigation bar color
@@ -67,15 +77,13 @@ typedef NS_OPTIONS(NSInteger, TRPayoutType) {
 /**
  @method: tapResearchDidReceiveRewardWithQuantity:transactionIdentifier:currenyName:payoutEvent
  @abstract: Notifies the delegate that a user has earned an in-app reward.
- 
  @param: quantity: Rewards quantity
  @param: transactionIdentifier: Rewards unique transaction identifier
  @param: currencyName: Currency name, depends on the payoutEvent
  @param: payoutEvent: Payout event type
  @param: placementIdentifier: The offer identifier
  */
-- (void)tapResearchDidReceiveRewardWithQuantity:(NSInteger)quantity transactionIdentifier:(NSString *)transactionIdentifier
-                                   currencyName:(NSString *)currencyName payoutEvent:(NSInteger)payoutEvent placementIdentifier:(NSString *)placementIdentifier;
+- (void)tapResearchDidReceiveReward:(TRReward *)reward;
 
 @end
 
@@ -86,18 +94,16 @@ typedef NS_OPTIONS(NSInteger, TRPayoutType) {
 /**
  @method: tapResearchSurveyModalOpened
  @abstract: Notifies the delegate when a user opens the survey modal.
- 
  @param: placement: Placement identifier
  */
-- (void)tapResearchSurveyModalOpenedWithPlacement:(TRPlacement *)placement;
+- (void)tapResearchSurveyWallOpenedWithPlacement:(TRPlacement *)placement;
 
 /**
  @method: tapResearchSurveyModalDismissed
  @abstract: Notifies the delegate when a user dismisses the survey modal.
- 
  @param: placement: Placement identifier
  */
-- (void)tapResearchSurveyModalDismissedWithPlacement:(TRPlacement *)placement;
+- (void)tapResearchSurveyWallDismissedWithPlacement:(TRPlacement *)placement;
 
 
 @end
